@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kahl.silir">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".FirstActivity"
+            android:theme="@style/NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".slpash.SplashActivity"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".getstarted.GetStartedActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.navigationdrawermenu.HelpActivity"
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".main.MainActivity" />
+        <activity
+            android:name=".getstarted.PhotoUploadActivity"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".main.navigationdrawermenu.SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".main.MainActivity" />
+        <activity
+            android:name=".main.home.MeasurementProfilesActivity"
+            android:label="@string/measurement_profiles_label_capt"
+            android:parentActivityName=".main.MainActivity" />
+        <activity
+            android:name=".main.home.AddNewProfileActivity"
+            android:label="@string/new_profile_label"
+            android:parentActivityName=".main.home.MeasurementProfilesActivity" />
+        <activity
+            android:name=".main.home.EditProfileActivity"
+            android:label="@string/edit_profile_label"
+            android:parentActivityName=".main.home.MeasurementProfilesActivity" />
+        <activity
+            android:name=".main.home.NewMeasurementActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".main.history.MeasurementResultActivity"
+            android:label="@string/result_label"
+            android:parentActivityName=".main.MainActivity" />
+        <activity android:name=".main.home.ChooseProfileActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+    </application>
+
+</manifest>

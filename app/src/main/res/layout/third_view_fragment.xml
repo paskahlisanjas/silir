@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:gravity="center"
+    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/phone"
+            app:materialIcon="cellphone_android"
+            app:materialIconColor="@color/white"
+            app:materialIconSize="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/cloud"
+            app:materialIcon="cloud_check"
+            app:materialIconColor="@color/white"
+            app:materialIconSize="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/description3"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic" />
+
+</RelativeLayout>

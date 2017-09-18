@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "528720658152",
+    "firebase_url": "https://silir-aea96.firebaseio.com",
+    "project_id": "silir-aea96",
+    "storage_bucket": "silir-aea96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528720658152:android:477b9aeaad5089d7",
+        "android_client_info": {
+          "package_name": "com.kahl.silir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528720658152-tl4bliu7lu7pqv7qljvughuroa22hkdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kahl.silir",
+            "certificate_hash": "36409a536d5e605bd45d23bb884ec0bbe801705e"
+          }
+        },
+        {
+          "client_id": "528720658152-4076l6e0nv68lj7553r9hmt6lm0ni0cn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1pMLdMWBFlLrIvlM9UwtrD_-Yu-nftck"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528720658152-4076l6e0nv68lj7553r9hmt6lm0ni0cn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

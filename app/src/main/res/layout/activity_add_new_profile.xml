@@ -1,0 +1,103 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.home.AddNewProfileActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:drawablePadding="5dp"
+            android:hint="@string/name_label"
+            android:inputType="textCapWords"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/softBrightBlue" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/dob_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:drawablePadding="5dp"
+                android:focusable="false"
+                android:gravity="start|center_vertical"
+                android:hint="@string/date_of_birth_label"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/softBrightBlue" />
+
+            <EditText
+                android:id="@+id/gender_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:drawablePadding="5dp"
+                android:focusable="false"
+                android:gravity="start|center_vertical"
+                android:hint="@string/gender_label"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/softBrightBlue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/height_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:drawablePadding="5dp"
+                android:gravity="start|center_vertical"
+                android:hint="@string/height_label"
+                android:inputType="number"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/softBrightBlue" />
+
+            <EditText
+                android:id="@+id/weight_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:drawablePadding="5dp"
+                android:gravity="start|center_vertical"
+                android:hint="@string/weight_label"
+                android:inputType="number"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/softBrightBlue" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:text="@string/save_label"
+            android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
+</ScrollView>

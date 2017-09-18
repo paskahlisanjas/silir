@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/cellphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:materialIcon="cellphone_android"
+            app:materialIconColor="@color/white"
+            app:materialIconSize="100dp" />
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/bluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:materialIconSize="30dp"
+            app:materialIcon="bluetooth_transfer"
+            app:materialIconColor="@color/white" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/description1"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic" />
+
+</RelativeLayout>

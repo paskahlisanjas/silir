@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context="com.kahl.silir.main.home.ChooseProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/choose_profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:title="@string/tittle_choose_profile"
+        app:titleTextColor="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_marginTop="100dp"
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <net.steamcrafted.materialiconlib.MaterialIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:materialIcon="account"
+
+                app:materialIconColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/choose_measurement_profile"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/profile_chooser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:popupElevation="0dp"
+            android:popupBackground="@color/white"
+            android:layout_below="@id/label" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/label2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_chooser"
+            android:gravity="center_vertical">
+
+            <net.steamcrafted.materialiconlib.MaterialIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:materialIcon="account_plus"
+                app:materialIconColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/or_create_the_new_one"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/create_new_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label2"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/new_profile_label"
+            android:textColor="@color/white"
+            android:padding="16dp" />
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/button_next"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>

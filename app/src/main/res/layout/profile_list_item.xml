@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile Name"
+        android:textSize="17sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/height_value"
+        android:layout_width="wrap_content"
+        android:textColor="#808080"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_name"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:text="Height: xxx cm" />
+
+    <TextView
+        android:textColor="#808080"
+        android:id="@+id/weight_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_name"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/height_value"
+        android:text="Weight: xx kg" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <net.steamcrafted.materialiconlib.MaterialIconView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/gender_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            app:materialIcon="gender_male"
+            app:materialIconColor="@color/colorPrimary" />
+
+        <TextView
+            android:textColor="#808080"
+            android:id="@+id/age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/gender_icon"
+            android:layout_marginTop="5dp"
+            android:text="xx"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

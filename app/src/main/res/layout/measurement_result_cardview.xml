@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    card_view:cardUseCompatPadding="true"
+    card_view:elevation="6dp">
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:paddingEnd="5dp">
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile Name"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/pef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PEF   : " />
+
+            <TextView
+                android:id="@+id/fev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FEV1 : " />
+
+            <TextView
+                android:id="@+id/fvc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FVC   : " />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/date"
+                android:textSize="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 Apr 1998"
+                android:textColor="@color/colorPrimary"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:textSize="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22:45:12"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/circular_ripple"
+            android:padding="5dp"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

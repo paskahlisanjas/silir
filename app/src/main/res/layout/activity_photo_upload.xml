@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.kahl.silir.getstarted.PhotoUploadActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/express_yourself_label"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/description_setting_photo_label"
+        android:textColor="@color/white"
+        android:textStyle="italic" />
+
+    <LinearLayout
+        android:id="@+id/cropper_container"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/softedge_box_white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <com.theartofdev.edmodo.cropper.CropImageView
+            android:id="@+id/cropper_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:cropAspectRatioX="1"
+            app:cropAspectRatioY="1"
+            app:cropFixAspectRatio="true"
+            app:cropScaleType="centerCrop"
+            app:cropShape="oval" />
+
+    </LinearLayout>
+
+    <net.steamcrafted.materialiconlib.MaterialIconView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/dummy_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        app:materialIcon="account_circle"
+        app:materialIconColor="@color/white"
+        app:materialIconSize="200dp" />
+
+    <ImageView
+        android:id="@+id/cropped_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/white_circle"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/save_label"
+        android:textColor="@color/colorPrimary"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageButton
+            android:id="@+id/agree_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circular_ripple"
+            android:padding="10dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/take_it_textview"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/taki_it_label"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/agree_button"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/upload_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circular_ripple"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/upload_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/upload_button"
+                android:text="@string/select_photo_label"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/skip_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/circular_ripple"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/skip_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/do_it_later_label"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>
