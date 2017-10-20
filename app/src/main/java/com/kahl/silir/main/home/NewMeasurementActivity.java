@@ -45,7 +45,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
     private final Activity activity = this;
     private final int BLUETOOTH_ACTIVATION_REQUEST = 1204;
     private final int MESSAGE_WHAT = 1;
-    private final String targetAddress = "00:21:13:00:A4:DC";
+    private final String targetAddress = "98:D3:32:30:A8:4E";
     public static final String PROFILE_EXTRA = "profileExtra";
     public static final String KEY_EXTRA = "keyExtra";
     public static final String RESULT_EXTRA = "resultExtra";
@@ -68,12 +68,12 @@ public class NewMeasurementActivity extends AppCompatActivity {
     private LineChart lineChart;
     private TextView displayData;
     private float xValue = 0;
-    private float idleValue = 0;
+    private float idleValue = 4.6f;
 
     private ArrayList<Float> result = new ArrayList<>();
     private List<Entry> entryList = new ArrayList<>();
     private LineDataSet lineDataSet = new LineDataSet(entryList, null);
-    private LineData lineData = new LineData(lineDataSet);
+    private LineData lineData = new LineData(/*lineDataSet*/);
     private boolean measured = false;
     private String key;
 
@@ -140,15 +140,23 @@ public class NewMeasurementActivity extends AppCompatActivity {
                 String writeMessage = new String(writeBuf);
                 writeMessage = writeMessage.substring(begin, end);
                 displayData.setText(writeMessage);
-                float yValue = Float.parseFloat(writeMessage);
-                if (xValue == 0) idleValue = yValue + 0.2f;
-                if (entryList.size() >= 100) lineDataSet.removeFirst();
-                if (yValue >= idleValue) {
+//                Log.d("SILIR", "received message: " + writeMessage);
+                float yValue;
+                try {
+                    yValue = Float.parseFloat(writeMessage);
+                } catch (NumberFormatException exp) {
+                    yValue = 4.6f;
+                }
+                Log.d("SILIR", "yValue : " + yValue);
+//                if (xValue == 100) idleValue = yValue;
+//                if (entryList.size() >= 100) lineDataSet.removeFirst();
+                /*if (xValue > 100 && yValue >= idleValue) {
                     measured = true;
                     result.add(yValue);
                     Log.d("SILIR", "result[" + xValue + "] = " + writeMessage);
                 } else if (measured) {
-                    if (result.size() >= 20) {
+                    if (result.size() >= 300) {
+                        Log.d("SILIR", "cekkkkkkkkkkkkkkkkkkkkk");
                         connectThread.cancel();
                         Intent intent = new Intent(activity, MeasurementResultActivity.class);
                         intent.putExtra(PROFILE_EXTRA, profile);
@@ -159,7 +167,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
                     } else {
                         measured = false;
                     }
-                }
+                }*/
                 lineDataSet.addEntry(new Entry(xValue, yValue));
                 lineData.notifyDataChanged();
                 lineChart.notifyDataSetChanged();
@@ -234,7 +242,6 @@ public class NewMeasurementActivity extends AppCompatActivity {
             byte[] buffer = new byte[256];
             int bytes = 0;
             int begin = 0;
-            lineChart.setData(lineData);
             while (true) {
                 try {
                     bytes += input.read(buffer, bytes, buffer.length - bytes);
@@ -249,6 +256,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
                         }
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
                     break;
                 }
             }
@@ -291,6 +299,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
 
         displayData = (TextView) findViewById(R.id.data_display);
         lineChart = (LineChart) findViewById(R.id.line_chart);
+
         lineDataSet.setHighlightEnabled(false);
         lineDataSet.setDrawValues(false);
         lineDataSet.setDrawCircles(false);
@@ -306,6 +315,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
         left.setTextColor(getResources().getColor(R.color.colorPrimary));
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setEnabled(false);
+//        lineChart.setData(lineData); ((ini yang perlu dicari tau buat ditaruh dimana))
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
