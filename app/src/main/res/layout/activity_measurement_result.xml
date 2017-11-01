@@ -92,6 +92,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/pef_value_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="wkwk" />
@@ -118,6 +119,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/fev1_value_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="haha" />
@@ -144,6 +146,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/fvc_value_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="wkha" />
@@ -193,8 +196,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/flow_volume_curve"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="230dp"
                         android:padding="16dp" />
 
                 </LinearLayout>
@@ -240,8 +242,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/volume_time_curve"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="230dp"
                         android:padding="16dp" />
                 </LinearLayout>
 

@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
     private final Activity activity = this;
     private final int BLUETOOTH_ACTIVATION_REQUEST = 1204;
     private final int MESSAGE_WHAT = 1;
-    private final String targetAddress = "98:D3:32:30:A8:4E";
+    private final String targetAddress = "00:21:13:01:29:C8";
     public static final String PROFILE_EXTRA = "profileExtra";
     public static final String KEY_EXTRA = "keyExtra";
     public static final String RESULT_EXTRA = "resultExtra";
@@ -68,12 +69,12 @@ public class NewMeasurementActivity extends AppCompatActivity {
     private LineChart lineChart;
     private TextView displayData;
     private float xValue = 0;
-    private float idleValue = 4.6f;
+    private float idleValue = 1f;
 
     private ArrayList<Float> result = new ArrayList<>();
     private List<Entry> entryList = new ArrayList<>();
-    private LineDataSet lineDataSet = new LineDataSet(entryList, null);
-    private LineData lineData = new LineData(/*lineDataSet*/);
+    private LineDataSet lineDataSet = new LineDataSet(entryList, "L/s");
+    private LineData lineData = new LineData(lineDataSet);
     private boolean measured = false;
     private String key;
 
@@ -140,34 +141,38 @@ public class NewMeasurementActivity extends AppCompatActivity {
                 String writeMessage = new String(writeBuf);
                 writeMessage = writeMessage.substring(begin, end);
                 displayData.setText(writeMessage);
-//                Log.d("SILIR", "received message: " + writeMessage);
                 float yValue;
                 try {
                     yValue = Float.parseFloat(writeMessage);
                 } catch (NumberFormatException exp) {
-                    yValue = 4.6f;
+                    yValue = 1f;
                 }
-                Log.d("SILIR", "yValue : " + yValue);
-//                if (xValue == 100) idleValue = yValue;
-//                if (entryList.size() >= 100) lineDataSet.removeFirst();
-                /*if (xValue > 100 && yValue >= idleValue) {
+                if (xValue == 100) {
+                    float sum = 0;
+                    for (Entry entry : entryList) sum += entry.getY();
+                    idleValue = sum/100;
+                }
+                if (entryList.size() >= 100) lineDataSet.removeFirst();
+                if (xValue > 100 && yValue >= idleValue) {
                     measured = true;
                     result.add(yValue);
-                    Log.d("SILIR", "result[" + xValue + "] = " + writeMessage);
+//                    Log.d("SILIR", "result[" + xValue + "] = " + writeMessage);
                 } else if (measured) {
-                    if (result.size() >= 300) {
-                        Log.d("SILIR", "cekkkkkkkkkkkkkkkkkkkkk");
-                        connectThread.cancel();
+                    if (Collections.max(result) > 4 && result.size() > 8) {
                         Intent intent = new Intent(activity, MeasurementResultActivity.class);
                         intent.putExtra(PROFILE_EXTRA, profile);
                         intent.putExtra(KEY_EXTRA, key);
                         intent.putExtra(RESULT_EXTRA, result);
                         intent.putExtra(FROM_HERE, true);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        connectThread.cancel();
+                        finish();
                     } else {
                         measured = false;
+                        result = new ArrayList<>();
                     }
-                }*/
+                }
                 lineDataSet.addEntry(new Entry(xValue, yValue));
                 lineData.notifyDataChanged();
                 lineChart.notifyDataSetChanged();
@@ -242,6 +247,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
             byte[] buffer = new byte[256];
             int bytes = 0;
             int begin = 0;
+            lineChart.setData(lineData);
             while (true) {
                 try {
                     bytes += input.read(buffer, bytes, buffer.length - bytes);
@@ -271,19 +277,25 @@ public class NewMeasurementActivity extends AppCompatActivity {
 
         public void cancel() {
             try {
+                Thread.sleep(1000);
                 socket.close();
             } catch (IOException e) {
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         Intent intent = getIntent();
         profile = (MeasurementProfile) intent.getSerializableExtra(ChooseProfileActivity.CHOSEN_PROFILE);
         key = intent.getStringExtra(ChooseProfileActivity.CHOSEN_KEY);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         setContentView(R.layout.activity_new_measurement);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         String[] nameSplitted = profile.getName().split(" ");
@@ -315,7 +327,6 @@ public class NewMeasurementActivity extends AppCompatActivity {
         left.setTextColor(getResources().getColor(R.color.colorPrimary));
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setEnabled(false);
-//        lineChart.setData(lineData); ((ini yang perlu dicari tau buat ditaruh dimana))
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
