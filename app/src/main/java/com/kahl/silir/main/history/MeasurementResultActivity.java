@@ -24,6 +24,8 @@ import com.kahl.silir.main.home.NewMeasurementActivity;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,7 @@ public class MeasurementResultActivity extends AppCompatActivity {
     private TextView pef;
     private TextView fev1;
     private TextView fvc;
+    private TextView fev1_fvc;
 
     private ResultDbHandler dbHandler;
 
@@ -47,6 +50,11 @@ public class MeasurementResultActivity extends AppCompatActivity {
     private MeasurementProfile profile;
     private String keyProfile;
     private ArrayList<Float> flowTimeCurve = new ArrayList<>();
+
+    private float set_pef;
+    private float set_fev1;
+    private float set_fvc;
+    private float set_fev1_fvc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,17 +103,30 @@ public class MeasurementResultActivity extends AppCompatActivity {
             LineData flowVolumeLineData = new LineData(flowVolumeDataSet);
             flowVolumeChart.setData(flowVolumeLineData);
 
+            /* Get the value of PEF, FEV1, and FVC
+             * from flowTimeCurve and volumes arrays
+             */
             pef = (TextView) findViewById(R.id.pef_value_textview);
             fev1 = (TextView) findViewById(R.id.fev1_value_textview);
             fvc = (TextView) findViewById(R.id.fvc_value_textview);
+            fev1_fvc = (TextView) findViewById(R.id.fev1_fvc_value_textview);
 
-            pef.setText(Collections.max(flowTimeCurve) + " L/s");
-            if (volumes.size() >= 20)
-                fev1.setText(volumes.get(20) + " L");
-            else
+            set_pef = Collections.max(flowTimeCurve);
+            pef.setText(set_pef + " L/s");
+
+            if (volumes.size() >= 20) {
+                set_fev1 = volumes.get(20);
+                fev1.setText(set_fev1 + " L");
+            }else
+                set_fev1 = 0f;
                 fev1.setText("NaN");
 
-            fvc.setText(volumes.get(volumes.size() - 1) + " L");
+            set_fvc = volumes.get(volumes.size() - 1);
+            fvc.setText(set_fvc + " L");
+
+            set_fev1_fvc = (set_fev1/set_fvc)*100;
+            fev1_fvc.setText(set_fev1_fvc + "%");
+
 
         } else {
             if (!dbHandler.isDbExist()) {
