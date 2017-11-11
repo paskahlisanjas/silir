@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -133,6 +134,8 @@ public class MeasurementResultActivity extends AppCompatActivity {
                 Log.d("SILIR", "database doesnt exist");
                 findViewById(R.id.no_data_label).setVisibility(View.VISIBLE);
                 findViewById(R.id.main_container).setVisibility(View.GONE);
+                findViewById(R.id.redo_button).setVisibility(View.GONE);
+                findViewById(R.id.save_button).setVisibility(View.GONE);
             } else {
                 /*data have already been available*/
             }
