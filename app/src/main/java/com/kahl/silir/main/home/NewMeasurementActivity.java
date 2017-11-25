@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +47,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
     private final Activity activity = this;
     private final int BLUETOOTH_ACTIVATION_REQUEST = 1204;
     private final int MESSAGE_WHAT = 1;
-    private final String targetAddress = "00:21:13:01:29:C8";
+    private final String targetAddress = "00:21:13:00:A4:DC";
     public static final String PROFILE_EXTRA = "profileExtra";
     public static final String KEY_EXTRA = "keyExtra";
     public static final String RESULT_EXTRA = "resultExtra";
@@ -131,6 +132,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
             }
         }
     };
+    int i = 0;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -159,18 +161,28 @@ public class NewMeasurementActivity extends AppCompatActivity {
 //                    Log.d("SILIR", "result[" + xValue + "] = " + writeMessage);
                 } else if (measured) {
                     if (Collections.max(result) > 4 && result.size() > 8) {
+                        /*for (int i=0; i<5; i++){
+                            result.add(0f);
+                        }*/
                         Intent intent = new Intent(activity, MeasurementResultActivity.class);
                         intent.putExtra(PROFILE_EXTRA, profile);
                         intent.putExtra(KEY_EXTRA, key);
                         intent.putExtra(RESULT_EXTRA, result);
                         intent.putExtra(FROM_HERE, true);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         connectThread.cancel();
-                        finish();
+//                        finish();
                     } else {
                         measured = false;
                         result = new ArrayList<>();
+                        i++;
+                        Log.v("Count donw is", " " + i);
+                        if (i == 6000){
+                            connectThread.cancel();
+                            Intent intent = new Intent(activity, ChooseProfileActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 }
                 lineDataSet.addEntry(new Entry(xValue, yValue));

@@ -27,6 +27,7 @@ import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,8 @@ import java.util.List;
 public class MeasurementResultActivity extends AppCompatActivity {
     private final int MENU_UPLOAD_ID = 1204;
     private final int MENU_DELETE_ID = 1998;
-    private final float DELAY = 0.05f;
+    private final int MENU_REDO_ID = 2014;
+    private final float DELAY = 0.01f;
 
     private LineChart flowVolumeChart;
     private LineChart volumeTimeChart;
@@ -107,26 +109,33 @@ public class MeasurementResultActivity extends AppCompatActivity {
             /* Get the value of PEF, FEV1, and FVC
              * from flowTimeCurve and volumes arrays
              */
+
             pef = (TextView) findViewById(R.id.pef_value_textview);
             fev1 = (TextView) findViewById(R.id.fev1_value_textview);
             fvc = (TextView) findViewById(R.id.fvc_value_textview);
             fev1_fvc = (TextView) findViewById(R.id.fev1_fvc_value_textview);
 
             set_pef = Collections.max(flowTimeCurve);
-            pef.setText(set_pef + " L/s");
-
-            if (volumes.size() >= 20) {
-                set_fev1 = volumes.get(20);
-                fev1.setText(set_fev1 + " L");
-            }else
-                set_fev1 = 0f;
-                fev1.setText("NaN");
+            float roundPef = round(set_pef, 2);
+            pef.setText(Float.toString(roundPef));
 
             set_fvc = volumes.get(volumes.size() - 1);
-            fvc.setText(set_fvc + " L");
+            float roundFvc = round(set_fvc, 2);
+            fvc.setText(Float.toString(roundFvc));
+
+            if (volumes.size() >= 100) {
+                set_fev1 = volumes.get(100);
+            }else {
+                set_fev1 = set_fvc;
+            }
+            float roundFev1 = round(set_fev1,2);
+            fev1.setText(Float.toString(roundFev1));
+
+
 
             set_fev1_fvc = (set_fev1/set_fvc)*100;
-            fev1_fvc.setText(set_fev1_fvc + "%");
+            float roundRatio = round(set_fev1_fvc, 2);
+            fev1_fvc.setText(Float.toString(roundRatio) + "%");
 
 
         } else {
@@ -134,12 +143,23 @@ public class MeasurementResultActivity extends AppCompatActivity {
                 Log.d("SILIR", "database doesnt exist");
                 findViewById(R.id.no_data_label).setVisibility(View.VISIBLE);
                 findViewById(R.id.main_container).setVisibility(View.GONE);
-                findViewById(R.id.redo_button).setVisibility(View.GONE);
-                findViewById(R.id.save_button).setVisibility(View.GONE);
             } else {
                 /*data have already been available*/
             }
         }
+    }
+
+    /**
+     * Round to certain number of decimals
+     *
+     * @param d
+     * @param decimalPlace
+     * @return
+     */
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 
     @Override
@@ -148,11 +168,23 @@ public class MeasurementResultActivity extends AppCompatActivity {
         uploadItem.setIcon(MaterialDrawableBuilder.with(this).setColor(Color.WHITE)
                 .setIcon(MaterialDrawableBuilder.IconValue.CLOUD_UPLOAD).build());
         uploadItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         MenuItem deleteItem = menu.add(0, MENU_DELETE_ID, 1, "Delete");
         deleteItem.setIcon(MaterialDrawableBuilder.with(this).setColor(Color.WHITE)
                 .setIcon(MaterialDrawableBuilder.IconValue.DELETE).build());
         deleteItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return false;
     }
 }

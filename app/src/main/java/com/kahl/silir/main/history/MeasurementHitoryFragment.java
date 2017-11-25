@@ -78,12 +78,14 @@ public class MeasurementHitoryFragment extends Fragment {
                         .setIcon(MaterialDrawableBuilder.IconValue.CLOUD).build());
                 localStorageButton.setImageDrawable(MaterialDrawableBuilder.with(activity).setColor(Color.WHITE)
                         .setIcon(MaterialDrawableBuilder.IconValue.FOLDER).build());
-                MeasurementResult[] results = new MeasurementResult[15];
-                for (int i = 0; i < 15; i++) {
+                MeasurementResult[] results = new MeasurementResult[1];
+                results[0] = new MeasurementResult(0f, 0f,0f,
+                        (new Date()).toString(), User.KEY_IN_LOCAL_DB);
+                /*for (int i = 0; i < 15; i++) {
                     float converted = ((float) i);
                     results[i] = new MeasurementResult(converted, converted, converted,
                             (new Date()).toString(), User.KEY_IN_LOCAL_DB);
-                }
+                }*/
                 recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setVisibility(View.VISIBLE);
