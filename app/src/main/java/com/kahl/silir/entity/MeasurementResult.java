@@ -16,15 +16,21 @@ public class MeasurementResult {
     private float pef;
     private String time;
     private String profileId;
+    private String arrayFlow;
+    private String arrayVolume;
+
     private String vtUrl = EMPTY_URL;
     private String fvUrl = EMPTY_URL;
 
-    public MeasurementResult(float fvc, float fev1, float pef, String time, String profileId) {
+    public MeasurementResult(float fvc, float fev1, float pef, String time, String profileId,
+                             String arrayFlow, String arrayVolume) {
         this.fvc = fvc;
         this.fev1 = fev1;
         this.pef = pef;
         this.time = time;
         this.profileId = profileId;
+        this.arrayFlow = arrayFlow;
+        this.arrayVolume = arrayVolume;
     }
 
     public String getTime() {
@@ -47,6 +53,10 @@ public class MeasurementResult {
         this.pef = pef;
     }
 
+    public void setArrayFlow(String arrayFlow) { this.arrayFlow = arrayFlow; }
+
+    public void setArrayVolume(String arrayVolume) {this.arrayVolume = arrayVolume; }
+
     public void setVtUrl(String vtUrl) {
         this.vtUrl = vtUrl;
     }
@@ -67,21 +77,10 @@ public class MeasurementResult {
         return pef;
     }
 
-    public String getVolumeTimeCurveFile() {
-        return Calendar.getInstance().getTime().toString() + "-vt.png";
-    }
+    public String getArrayFlow() { return arrayFlow; }
 
-    public String getFlowVolumeLoopFile() {
-        return Calendar.getInstance().getTime().toString() + "-fv.png";
-    }
+    public String getArrayVolume() { return arrayVolume; }
 
-    public String getVtUrl() {
-        return vtUrl;
-    }
-
-    public String getFvUrl() {
-        return fvUrl;
-    }
 
     public void setProfileId(String profileId) {
         this.profileId = profileId;
