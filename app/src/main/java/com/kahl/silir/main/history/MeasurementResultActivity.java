@@ -38,7 +38,6 @@ import java.util.List;
 public class MeasurementResultActivity extends AppCompatActivity {
     private final int MENU_UPLOAD_ID = 1204;
     private final int MENU_DELETE_ID = 1998;
-    private final int MENU_REDO_ID = 2014;
     private final float DELAY = 0.01f;
 
     private LineChart flowVolumeChart;

@@ -30,6 +30,8 @@ public class ResultDbHandler extends DatabaseHandler {
     private final String RESULT_ARRAY_FLOW = "arrayFlow";
     private final String RESULT_ARRAY_VOLUME = "arrayVolume";
 
+    SQLiteDatabase db;
+
 
     public ResultDbHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -65,7 +67,7 @@ public class ResultDbHandler extends DatabaseHandler {
 
     @Override
     public int countRecord() {
-        SQLiteDatabase db = getReadableDatabase();
+        db = getReadableDatabase();
         final String query = "SELECT count(*) FROM " + TABLE_RESULTS;
         Cursor cursor = db.rawQuery(query, null);
         int result = cursor.moveToFirst() ? cursor.getInt(0) : 0;
@@ -78,10 +80,9 @@ public class ResultDbHandler extends DatabaseHandler {
             RESULT_ARRAY_FLOW, RESULT_ARRAY_VOLUME};
 
     public void addResult(MeasurementResult measurementResult) {
-        SQLiteDatabase db = getReadableDatabase();
+        db = getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(RESULT_ORDER, 0);
         values.put(RESULT_PROFILE, measurementResult.getProfileId());
         values.put(RESULT_FVC, measurementResult.getFvc());
         values.put(RESULT_FEV1, measurementResult.getFev1());
@@ -95,7 +96,7 @@ public class ResultDbHandler extends DatabaseHandler {
     }
 
     public void deleteResult(String order, String profileId) {
-        SQLiteDatabase db = getReadableDatabase();
+        db = getReadableDatabase();
         db.delete(TABLE_RESULTS, RESULT_ORDER + " =? AND " + RESULT_PROFILE + " =?", new String[]{order, profileId});
         db.close();
     }
@@ -109,7 +110,7 @@ public class ResultDbHandler extends DatabaseHandler {
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
-            if (cursor.moveToFirst())
+            if (cursor.moveToLast())
                 retval = new MeasurementResult(
                         cursor.getFloat(2),
                         cursor.getFloat(3),

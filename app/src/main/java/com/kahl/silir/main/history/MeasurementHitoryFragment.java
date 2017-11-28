@@ -21,6 +21,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.kahl.silir.R;
 import com.kahl.silir.customstuff.MeasurementHistoryAdapter;
+import com.kahl.silir.databasehandler.ResultDbHandler;
 import com.kahl.silir.entity.MeasurementProfile;
 import com.kahl.silir.entity.MeasurementResult;
 import com.kahl.silir.entity.User;
@@ -40,6 +41,7 @@ public class MeasurementHitoryFragment extends Fragment {
     private TextView noDataLabel;
     private TextView storageStatusLabel;
     private Activity activity;
+    private ResultDbHandler db;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class MeasurementHitoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        db = new ResultDbHandler(activity);
+        final int countDb = db.countRecord();
         View rootView = inflater.inflate(R.layout.measurement_history_fragment, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.card_list);
         localStorageButton = (ImageButton) rootView.findViewById(R.id.local_storage_button);
@@ -79,20 +83,29 @@ public class MeasurementHitoryFragment extends Fragment {
                 localStorageButton.setImageDrawable(MaterialDrawableBuilder.with(activity).setColor(Color.WHITE)
                         .setIcon(MaterialDrawableBuilder.IconValue.FOLDER).build());
 
-                MeasurementResult[] results = new MeasurementResult[1];
-                results[0] = new MeasurementResult(0f, 0f,0f, (new Date()).toString(),
-                        User.KEY_IN_LOCAL_DB, null, null);
-                /*for (int i = 0; i < 15; i++) {
-                    float converted = ((float) i);
-                    results[i] = new MeasurementResult(converted, converted, converted,
-                            (new Date()).toString(), User.KEY_IN_LOCAL_DB);
-                }*/
+                MeasurementResult[] results = new MeasurementResult[countDb];
+                for (int i = 0; i < countDb; i++) {
+                    
+                    MeasurementResult historyResult = db.getCurrentMeasurement();
+                    float fev1 = historyResult.getFev1();
+                    float fvc = historyResult.getFvc();
+                    float pef = historyResult.getPef();
+                    String time = historyResult.getTime();
+                    String profile = historyResult.getProfileId();
+                    String flowString = historyResult.getArrayFlow();
+                    String volumeString = historyResult.getArrayVolume();
+
+                    results[i] = new MeasurementResult(fvc, fev1, pef, time, profile, flowString, volumeString);
+
+                }
                 recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeIn).playOn(recyclerView);
                 YoYo.with(Techniques.FadeOut).playOn(noDataLabel);
                 noDataLabel.setVisibility(View.GONE);
+
+
             }
         });
         cloudStorageButton.setOnClickListener(new View.OnClickListener() {
