@@ -27,6 +27,10 @@ public class ResultDbHandler extends DatabaseHandler {
     private final String RESULT_FEV1 = "fev1";
     private final String RESULT_PEV = "pev";
     private final String RESULT_TIME = "time";
+    private final String RESULT_ARRAY_FLOW = "arrayFlow";
+    private final String RESULT_ARRAY_VOLUME = "arrayVolume";
+
+    SQLiteDatabase db;
 
 
     public ResultDbHandler(Context context) {
@@ -42,8 +46,11 @@ public class ResultDbHandler extends DatabaseHandler {
                 + RESULT_FEV1 + " REAL, "
                 + RESULT_PEV + " REAL, "
                 + RESULT_TIME + " TEXT, "
+                + RESULT_ARRAY_FLOW + " TEXT, "
+                + RESULT_ARRAY_VOLUME + " TEXT, "
                 + "FOREIGN KEY(" + RESULT_PROFILE + ") REFERENCES "
-                + ProfileDbHandler.TABLE_PROFILES + "(" + ProfileDbHandler.PROFILE_ID + "))";
+                + ProfileDbHandler.TABLE_PROFILES + "(" + ProfileDbHandler.PROFILE_ID + "));";
+
         db.execSQL(query);
     }
 
@@ -60,7 +67,7 @@ public class ResultDbHandler extends DatabaseHandler {
 
     @Override
     public int countRecord() {
-        SQLiteDatabase db = getReadableDatabase();
+        db = getReadableDatabase();
         final String query = "SELECT count(*) FROM " + TABLE_RESULTS;
         Cursor cursor = db.rawQuery(query, null);
         int result = cursor.moveToFirst() ? cursor.getInt(0) : 0;
@@ -69,26 +76,27 @@ public class ResultDbHandler extends DatabaseHandler {
         return result;
     }
 
-    final String[] allColumns = {RESULT_ORDER, RESULT_FEV1, RESULT_FVC, RESULT_PEV, RESULT_TIME};
+    final String[] allColumns = {RESULT_ORDER, RESULT_FEV1, RESULT_FVC, RESULT_PEV, RESULT_TIME,
+            RESULT_ARRAY_FLOW, RESULT_ARRAY_VOLUME};
 
-    public void addResult(MeasurementResult measurementResult, String profileId) {
-        SQLiteDatabase db = getReadableDatabase();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM YYYY|HH:mm:ss");
+    public void addResult(MeasurementResult measurementResult) {
+        db = getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(RESULT_ORDER, 0);
-        values.put(RESULT_PROFILE, profileId);
+        values.put(RESULT_PROFILE, measurementResult.getProfileId());
         values.put(RESULT_FVC, measurementResult.getFvc());
         values.put(RESULT_FEV1, measurementResult.getFev1());
         values.put(RESULT_PEV, measurementResult.getPef());
-        values.put(RESULT_TIME, formatter.format(new Date()));
+        values.put(RESULT_TIME, measurementResult.getTime());
+        values.put(RESULT_ARRAY_FLOW, measurementResult.getArrayFlow());
+        values.put(RESULT_ARRAY_VOLUME, measurementResult.getArrayVolume());
 
         db.insert(TABLE_RESULTS, RESULT_ORDER, values);
         db.close();
     }
 
     public void deleteResult(String order, String profileId) {
-        SQLiteDatabase db = getReadableDatabase();
+        db = getReadableDatabase();
         db.delete(TABLE_RESULTS, RESULT_ORDER + " =? AND " + RESULT_PROFILE + " =?", new String[]{order, profileId});
         db.close();
     }
@@ -96,14 +104,21 @@ public class ResultDbHandler extends DatabaseHandler {
     public MeasurementResult getCurrentMeasurement() {
         MeasurementResult retval = null;
         SQLiteDatabase db = getReadableDatabase();
-        final String subQuery = "SELECT max(" + RESULT_ORDER + ") FROM " + TABLE_RESULTS;
-        final String query = "SELECT * FROM (" + subQuery + ")";
+        //final String subQuery = "SELECT max(" + RESULT_ORDER + ") FROM " + TABLE_RESULTS;
+        //final String query = "SELECT * FROM (" + subQuery + ")";
+        final String query = "SELECT * FROM " + TABLE_RESULTS;
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
-            if (cursor.moveToFirst())
-                retval = new MeasurementResult(cursor.getFloat(2), cursor.getFloat(3),
-                        cursor.getFloat(4), cursor.getString(4), cursor.getString(1));
+            if (cursor.moveToLast())
+                retval = new MeasurementResult(
+                        cursor.getFloat(2),
+                        cursor.getFloat(3),
+                        cursor.getFloat(4),
+                        cursor.getString(5),
+                        cursor.getString(1),
+                        cursor.getString(6),
+                        cursor.getString(7));
         }
         cursor.close();
         db.close();
