@@ -1,6 +1,7 @@
 package com.kahl.silir.main.history;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -83,28 +84,14 @@ public class MeasurementHitoryFragment extends Fragment {
                 localStorageButton.setImageDrawable(MaterialDrawableBuilder.with(activity).setColor(Color.WHITE)
                         .setIcon(MaterialDrawableBuilder.IconValue.FOLDER).build());
 
-                MeasurementResult[] results = new MeasurementResult[countDb];
-                for (int i = 0; i < countDb; i++) {
-                    
-                    MeasurementResult historyResult = db.getCurrentMeasurement();
-                    float fev1 = historyResult.getFev1();
-                    float fvc = historyResult.getFvc();
-                    float pef = historyResult.getPef();
-                    String time = historyResult.getTime();
-                    String profile = historyResult.getProfileId();
-                    String flowString = historyResult.getArrayFlow();
-                    String volumeString = historyResult.getArrayVolume();
+                MeasurementResult[] results = db.getAllMeasurement();
 
-                    results[i] = new MeasurementResult(fvc, fev1, pef, time, profile, flowString, volumeString);
-
-                }
                 recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeIn).playOn(recyclerView);
                 YoYo.with(Techniques.FadeOut).playOn(noDataLabel);
                 noDataLabel.setVisibility(View.GONE);
-
 
             }
         });

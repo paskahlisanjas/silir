@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Measure;
 import android.util.Log;
 
 import com.kahl.silir.entity.MeasurementResult;
@@ -125,12 +126,37 @@ public class ResultDbHandler extends DatabaseHandler {
         return retval;
     }
 
-    public HashMap<String, MeasurementResult> getAllResult() {
+    public MeasurementResult[] getAllMeasurement() {
+        SQLiteDatabase db = getReadableDatabase();
+        final String query = "SELECT * FROM " + TABLE_RESULTS;
+
+        Cursor cursor = db.rawQuery(query, null);
+        MeasurementResult[] retval = new MeasurementResult[cursor.getCount()];
+        if (cursor != null){
+            for (int i=0; i<cursor.getCount(); i++){
+                cursor.moveToPosition(i);
+                retval[i] =new MeasurementResult(
+                        cursor.getFloat(2),
+                        cursor.getFloat(3),
+                        cursor.getFloat(4),
+                        cursor.getString(5),
+                        cursor.getString(1),
+                        cursor.getString(6),
+                        cursor.getString(7)
+                );
+            }
+        }
+        cursor.close();
+        db.close();
+        return retval;
+    }
+
+    /*public HashMap<String, MeasurementResult> getAllResult() {
         HashMap<String, MeasurementResult> result = new HashMap<>();
 
         /*to be continued*/
 
-        return result;
-    }
+     //   return result;
+   // }*/
 }
 
