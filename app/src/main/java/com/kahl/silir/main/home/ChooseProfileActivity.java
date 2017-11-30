@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -70,6 +71,8 @@ public class ChooseProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(activity, NewMeasurementActivity.class);
                 intent.putExtra(CHOSEN_PROFILE, profilesDetail.get(profileChooser.getSelectedItemPosition()));
+                intent.putExtra(CHOSEN_KEY, keys.get(profileChooser.getSelectedItemPosition()));
+                Log.d("SILIR", "profile_id (chooseProfileActivity) = " + keys.get(profileChooser.getSelectedItemPosition()));
                 startActivity(intent);
             }
         });

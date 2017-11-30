@@ -66,6 +66,7 @@
             android:label="@string/result_label"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".main.home.ChooseProfileActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

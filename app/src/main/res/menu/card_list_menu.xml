@@ -3,6 +3,4 @@
     <item
         android:id="@+id/delete_record"
         android:title="Delete"/>
-    <item android:id="@+id/report_record"
-        android:title="Generate Report"/>
 </menu>

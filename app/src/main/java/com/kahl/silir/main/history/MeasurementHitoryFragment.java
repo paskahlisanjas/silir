@@ -1,8 +1,12 @@
 package com.kahl.silir.main.history;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +30,8 @@ import com.kahl.silir.databasehandler.ResultDbHandler;
 import com.kahl.silir.entity.MeasurementProfile;
 import com.kahl.silir.entity.MeasurementResult;
 import com.kahl.silir.entity.User;
+import com.kahl.silir.main.MainActivity;
+import com.kahl.silir.main.home.HomeFragment;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
@@ -43,6 +49,7 @@ public class MeasurementHitoryFragment extends Fragment {
     private TextView storageStatusLabel;
     private Activity activity;
     private ResultDbHandler db;
+    public static final String FRAGMENT_TAG = MeasurementHitoryFragment.class.getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,7 +142,29 @@ public class MeasurementHitoryFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 0:
-                Toast.makeText(getActivity(), "Still being developed.", Toast.LENGTH_SHORT).show();
+                if (!db.isDbExist()){
+                    Toast.makeText(activity, "No data to be deleted", Toast.LENGTH_SHORT).show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Delete all data?");
+                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(activity, "All data deleted", Toast.LENGTH_SHORT);
+                            db.deleteAllResult();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog != null) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
                 break;
         }
         return true;

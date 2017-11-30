@@ -1,6 +1,7 @@
 package com.kahl.silir.customstuff;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kahl.silir.R;
 import com.kahl.silir.databasehandler.ProfileDbHandler;
 import com.kahl.silir.entity.MeasurementProfile;
 import com.kahl.silir.entity.MeasurementResult;
+import com.kahl.silir.main.history.MeasurementResultActivity;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
@@ -30,6 +33,8 @@ public class MeasurementHistoryAdapter extends RecyclerView
     private Context context;
     private MeasurementResult[] results;
     private final Drawable dots;
+    public static final String FROM_HERE = "fromMeasurementHistoryAdapter";
+    public static final String RESULT = "resultExtra";
 
     public MeasurementHistoryAdapter(Context context, MeasurementResult[] results) {
         this.context = context;
@@ -47,8 +52,8 @@ public class MeasurementHistoryAdapter extends RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(MeasurementHistoryHolder holder, int position) {
-        MeasurementResult result = results[position];
+    public void onBindViewHolder(MeasurementHistoryHolder holder, final int position) {
+        final MeasurementResult result = results[position];
 
         ProfileDbHandler dbHandler = new ProfileDbHandler(context);
         MeasurementProfile profile = dbHandler.getProfile(result.getProfileId());
@@ -60,19 +65,19 @@ public class MeasurementHistoryAdapter extends RecyclerView
         holder.pefTextView.setText("PEF   : " + result.getPef());
         holder.fevTextView.setText("FEV1  : " + result.getFev1());
         holder.fvcTextView.setText("FVC   : " + result.getFvc());
-        Date now = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        holder.dateTextView.setText(dateFormat.format(now));
-        holder.timeTextView.setText(timeFormat.format(now));
-        holder.menuButton.setImageDrawable(dots);
-        holder.menuButton.setOnClickListener(new View.OnClickListener() {
+        String[] dateTime = result.getTime().split(" - ");
+        holder.dateTextView.setText(dateTime[0]);
+        holder.timeTextView.setText(dateTime[1]);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopUpMenu(v);
+                Intent intent = new Intent(context, MeasurementResultActivity.class);
+                intent.putExtra(FROM_HERE, true);
+                intent.putExtra(RESULT, result);
+                context.startActivity(intent);
             }
         });
-
     }
 
     private void showPopUpMenu(View v) {
@@ -80,6 +85,7 @@ public class MeasurementHistoryAdapter extends RecyclerView
         MenuInflater inflater = menu.getMenuInflater();
         inflater.inflate(R.menu.card_list_menu, menu.getMenu());
         menu.show();
+
     }
 
     @Override
@@ -95,7 +101,6 @@ public class MeasurementHistoryAdapter extends RecyclerView
         protected TextView fvcTextView;
         protected TextView dateTextView;
         protected TextView timeTextView;
-        protected ImageButton menuButton;
 
         public MeasurementHistoryHolder(View itemView) {
             super(itemView);
@@ -105,7 +110,6 @@ public class MeasurementHistoryAdapter extends RecyclerView
             fvcTextView = (TextView) itemView.findViewById(R.id.fvc);
             dateTextView = (TextView) itemView.findViewById(R.id.date);
             timeTextView = (TextView) itemView.findViewById(R.id.time);
-            menuButton = (ImageButton) itemView.findViewById(R.id.menu_button);
         }
     }
 }

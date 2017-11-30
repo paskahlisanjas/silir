@@ -168,6 +168,7 @@ public class NewMeasurementActivity extends AppCompatActivity {
                         intent.putExtra(KEY_EXTRA, key);
                         intent.putExtra(RESULT_EXTRA, result);
                         intent.putExtra(FROM_HERE, true);
+                        Log.d("SILIR", "profile_id (newMeasurementActivity) = " + key);
 //                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         connectThread.cancel();

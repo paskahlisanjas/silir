@@ -2,12 +2,14 @@ package com.kahl.silir.databasehandler;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Measure;
 import android.util.Log;
 
 import com.kahl.silir.entity.MeasurementResult;
+import com.kahl.silir.main.history.MeasurementHitoryFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -96,9 +98,17 @@ public class ResultDbHandler extends DatabaseHandler {
         db.close();
     }
 
-    public void deleteResult(String order, String profileId) {
+    public void deleteResult(String time) {
         db = getReadableDatabase();
-        db.delete(TABLE_RESULTS, RESULT_ORDER + " =? AND " + RESULT_PROFILE + " =?", new String[]{order, profileId});
+        Log.d("SILIR", "Data to be deleted : " + time);
+        db.delete(TABLE_RESULTS, RESULT_TIME + " =? ", new String[]{time});
+        Log.d("SILIR", "Data deleted");
+        db.close();
+    }
+
+    public void deleteAllResult() {
+        db = getReadableDatabase();
+        db.delete(TABLE_RESULTS, null, null);
         db.close();
     }
 
@@ -132,10 +142,11 @@ public class ResultDbHandler extends DatabaseHandler {
 
         Cursor cursor = db.rawQuery(query, null);
         MeasurementResult[] retval = new MeasurementResult[cursor.getCount()];
+        int i = 0;
         if (cursor != null){
-            for (int i=0; i<cursor.getCount(); i++){
+            while (cursor.moveToNext()) {
                 cursor.moveToPosition(i);
-                retval[i] =new MeasurementResult(
+                MeasurementResult result = new MeasurementResult(
                         cursor.getFloat(2),
                         cursor.getFloat(3),
                         cursor.getFloat(4),
@@ -144,6 +155,9 @@ public class ResultDbHandler extends DatabaseHandler {
                         cursor.getString(6),
                         cursor.getString(7)
                 );
+                retval[i] = result;
+                Log.d("SILIR", "profil[" + i + "] = " + result.getProfileId());
+                i++;
             }
         }
         cursor.close();

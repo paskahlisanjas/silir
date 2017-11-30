@@ -83,6 +83,7 @@ public class ProfileDbHandler extends DatabaseHandler {
     }
 
     public MeasurementProfile getProfile(String id) {
+        Log.d("SILIR", "profil_id = " + id);
         final String[] ALL_COLUMNS = new String[]{PROFILE_ID, PROFILE_NAME, PROFILE_DOB, PROFILE_GENDER, PROFILE_HEIGHT, PROFILE_WEIGHT};
 
         SQLiteDatabase db = getReadableDatabase();
@@ -118,6 +119,7 @@ public class ProfileDbHandler extends DatabaseHandler {
         ContentValues values = new ContentValues();
         values.put(PROFILE_NAME, profile.getName());
         values.put(PROFILE_DOB, profile.getDob());
+        values.put(PROFILE_ID, id);
         values.put(PROFILE_GENDER, profile.getGender());
         values.put(PROFILE_HEIGHT, profile.getHeight());
         values.put(PROFILE_WEIGHT, profile.getWeight());

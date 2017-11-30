@@ -2,13 +2,14 @@ package com.kahl.silir.entity;
 
 import com.kahl.silir.databasehandler.ProfileDbHandler;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by Paskahlis Anjas Prabowo on 02/08/2017.
  */
 
-public class MeasurementResult {
+public class MeasurementResult implements Serializable {
     public static final String EMPTY_URL = "empty";
 
     private float fvc;
