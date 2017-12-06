@@ -20,13 +20,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:popupTheme="@android:style/Widget.Holo.ActionBar">
+            app:popupTheme="@android:style/Widget.Holo.ActionBar"
+            android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                android:src="@drawable/silir_text" />
+                android:src="@drawable/silir_logo_no_circle" />
 
         </android.support.v7.widget.Toolbar>
 

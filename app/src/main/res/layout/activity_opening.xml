@@ -4,22 +4,21 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <com.kahl.silir.customstuff.ConeriaTextView
-        android:id="@+id/center_text"
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Silir"
-        android:textColor="@color/white"
+        android:layout_height="150dp"
         android:layout_centerInParent="true"
-        android:textSize="80sp"/>
+        android:src="@drawable/silir_logo" />
 
     <TextView
-        android:layout_below="@id/center_text"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="&quot;never been this easy&quot;"
+        android:layout_below="@id/logo"
         android:gravity="center"
+        android:text="&quot;never been this easy&quot;"
         android:textColor="#FFF"
-        android:textStyle="italic"/>
+        android:textStyle="italic" />
 
 </RelativeLayout>

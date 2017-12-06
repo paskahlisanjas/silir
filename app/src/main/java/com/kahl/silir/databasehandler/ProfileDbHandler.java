@@ -88,10 +88,12 @@ public class ProfileDbHandler extends DatabaseHandler {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLE_PROFILES, ALL_COLUMNS, IS_KEY_ID_EQUAL, new String[]{id},
                 null, null, null, null);
-        if (cursor != null) cursor.moveToFirst();
-
-        MeasurementProfile profile = new MeasurementProfile(cursor.getString(1), cursor.getString(2),
-                cursor.getString(3), cursor.getInt(4), cursor.getInt(5));
+        MeasurementProfile profile = null;
+        if (cursor != null) {
+            cursor.moveToFirst();
+            profile = new MeasurementProfile(cursor.getString(1), cursor.getString(2),
+                    cursor.getString(3), cursor.getInt(4), cursor.getInt(5));
+        }
         cursor.close();
         db.close();
         return profile;

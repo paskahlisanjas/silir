@@ -1,6 +1,7 @@
 package com.kahl.silir.main.history;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,12 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kahl.silir.R;
 import com.kahl.silir.customstuff.MeasurementHistoryAdapter;
 import com.kahl.silir.databasehandler.ResultDbHandler;
@@ -28,7 +35,9 @@ import com.kahl.silir.entity.User;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Paskahlis Anjas Prabowo on 26/07/2017.
@@ -41,7 +50,20 @@ public class MeasurementHitoryFragment extends Fragment {
     private TextView noDataLabel;
     private TextView storageStatusLabel;
     private Activity activity;
-    private ResultDbHandler db;
+
+    public static final String FROM_HERE = "fromMeasurementHistory";
+    public static final String CHOSEN_RESULT = "chosenResult";
+    public static final String IDENTIFY_CLOUD = "identifyCloud";
+
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+            .child("measurements").child(firebaseAuth.getCurrentUser().getUid());
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        localStorageButton.callOnClick();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +75,6 @@ public class MeasurementHitoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = new ResultDbHandler(activity);
-        final int countDb = db.countRecord();
         View rootView = inflater.inflate(R.layout.measurement_history_fragment, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.card_list);
         localStorageButton = (ImageButton) rootView.findViewById(R.id.local_storage_button);
@@ -83,29 +103,18 @@ public class MeasurementHitoryFragment extends Fragment {
                 localStorageButton.setImageDrawable(MaterialDrawableBuilder.with(activity).setColor(Color.WHITE)
                         .setIcon(MaterialDrawableBuilder.IconValue.FOLDER).build());
 
-                MeasurementResult[] results = new MeasurementResult[countDb];
-                for (int i = 0; i < countDb; i++) {
-                    
-                    MeasurementResult historyResult = db.getCurrentMeasurement();
-                    float fev1 = historyResult.getFev1();
-                    float fvc = historyResult.getFvc();
-                    float pef = historyResult.getPef();
-                    String time = historyResult.getTime();
-                    String profile = historyResult.getProfileId();
-                    String flowString = historyResult.getArrayFlow();
-                    String volumeString = historyResult.getArrayVolume();
-
-                    results[i] = new MeasurementResult(fvc, fev1, pef, time, profile, flowString, volumeString);
-
+                ResultDbHandler dbHandler = new ResultDbHandler(getActivity());
+                if (dbHandler.isDbExist()) {
+                    List<MeasurementResult> results = dbHandler.getAllResult();
+                    recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results, false));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setVisibility(View.VISIBLE);
+                    YoYo.with(Techniques.FadeIn).playOn(recyclerView);
+                    YoYo.with(Techniques.FadeOut).playOn(noDataLabel);
+                    noDataLabel.setVisibility(View.GONE);
+                } else {
+                    noDataLabel.setVisibility(View.VISIBLE);
                 }
-                recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results));
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.FadeIn).playOn(recyclerView);
-                YoYo.with(Techniques.FadeOut).playOn(noDataLabel);
-                noDataLabel.setVisibility(View.GONE);
-
-
             }
         });
         cloudStorageButton.setOnClickListener(new View.OnClickListener() {
@@ -123,10 +132,39 @@ public class MeasurementHitoryFragment extends Fragment {
                 localStorageButton.setImageDrawable(MaterialDrawableBuilder.with(activity)
                         .setColor(activity.getResources().getColor(R.color.colorPrimary))
                         .setIcon(MaterialDrawableBuilder.IconValue.FOLDER).build());
-                YoYo.with(Techniques.FadeOut).playOn(recyclerView);
-                recyclerView.setVisibility(View.GONE);
-                noDataLabel.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.FadeIn).playOn(noDataLabel);
+
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Please wait");
+                progressDialog.show();
+                final List<MeasurementResult> results = new ArrayList<>();
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            MeasurementResult result = child.getValue(MeasurementResult.class);
+                            results.add(result);
+                        }
+                        progressDialog.dismiss();
+                        if (results.size() > 0) {
+                            recyclerView.setAdapter(new MeasurementHistoryAdapter(getActivity(), results, true));
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            recyclerView.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.FadeIn).playOn(recyclerView);
+                            YoYo.with(Techniques.FadeOut).playOn(noDataLabel);
+                            noDataLabel.setVisibility(View.GONE);
+                        } else {
+                            YoYo.with(Techniques.FadeOut).playOn(recyclerView);
+                            recyclerView.setVisibility(View.GONE);
+                            noDataLabel.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.FadeIn).playOn(noDataLabel);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         localStorageButton.callOnClick();

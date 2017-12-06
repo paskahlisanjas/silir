@@ -13,15 +13,11 @@ public class RiemmanIntegrator {
 
     public static List<Float> integrate(List<Float> data, float delta) {
         List<Float> result = new ArrayList<>();
-        result.add(0f);
 
         float prevVal = 0;
         float prevArea = 0;
         for (float unit : data) {
             float temp = calculateArea(prevVal, unit, delta);
-           /* Log.d("SILIR", "unit = " + unit);
-            Log.d("SILIR", "prevVal = " + prevVal);
-            Log.d("SILIR", "prevArea = " + prevArea + " ------------- ");*/
             result.add(temp + prevArea);
             prevArea += temp;
             prevVal = unit;

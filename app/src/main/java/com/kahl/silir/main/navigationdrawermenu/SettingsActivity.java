@@ -181,6 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
                             shake(field1);
                             return;
                         }
+
                         progressDialog.setMessage(getString(R.string.updating_label));
                         progressDialog.setCancelable(false);
                         databaseReference.child(User.NAME).setValue(newName)

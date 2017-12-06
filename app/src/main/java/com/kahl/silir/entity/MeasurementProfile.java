@@ -20,6 +20,9 @@ public class MeasurementProfile implements Serializable {
     protected int height;
     protected int weight;
 
+    public static String GENDER_FEMALE = "Female";
+    public static String GENDER_MALE = "Male";
+
     public MeasurementProfile() {}
 
     public MeasurementProfile(String name, String dob, String gender, int height, int weight) {

@@ -15,12 +15,12 @@
         android:padding="16dp">
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/no_data_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No data avalable"/>
+            android:text="No data avalable"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/main_container"
@@ -72,12 +72,45 @@
 
                     </LinearLayout>
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="16dp">
+
+                        <LinearLayout
+                            android:gravity="center_vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/name_text_view"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="My name is"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/gender_status"
+                                android:layout_marginEnd="5dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/age_status"
+                                android:textStyle="bold"/>
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0.1dp"
+                            android:layout_below="@id/default_container"
+                            android:layout_margin="10dp"
+                            android:background="#808080" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -173,13 +206,12 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/fev1_fvc_value_textview"
+                                android:id="@+id/ratio_fev1_fvc_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="asdf" />
+                                android:text="wkha" />
 
                         </LinearLayout>
-
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -220,11 +252,22 @@
                             android:textStyle="bold|italic" />
                     </LinearLayout>
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/flow_volume_curve"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="230dp"
-                        android:padding="16dp" />
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/flow_volume_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/flow_volume_curve"
+                            android:layout_width="match_parent"
+                            android:layout_height="230dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -266,17 +309,27 @@
                             android:textStyle="bold|italic" />
                     </LinearLayout>
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/volume_time_curve"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="230dp"
-                        android:padding="16dp" />
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/volume_time_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/volume_time_curve"
+                            android:layout_width="match_parent"
+                            android:layout_height="230dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
         </LinearLayout>
+
     </RelativeLayout>
-
-
 
 </ScrollView>

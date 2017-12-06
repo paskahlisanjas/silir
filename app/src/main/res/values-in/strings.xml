@@ -108,4 +108,11 @@
     <string name="volume_time_curve_label">Kurva Volume-waktu</string>
     <string name="cloud_storage_label">Penyimpanan Cloud</string>
     <string name="local_storage_label">Penyimpanan Lokal</string>
+    <string name="tittle_choose_profile">Pilih profil</string>
+    <string name="button_next">lanjut</string>
+    <string name="choose_measurement_profile">Pilih profil terdaftar:</string>
+    <string name="or_create_the_new_one">atau buat profil baru:</string>
+    <string name="retrieving_mesurement_profiles">memproses...</string>
+    <string name="setting_label_height">Tinggi</string>
+    <string name="setting_label_weight">Berat</string>
 </resources>

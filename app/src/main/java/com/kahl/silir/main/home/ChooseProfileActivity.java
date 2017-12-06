@@ -70,6 +70,7 @@ public class ChooseProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(activity, NewMeasurementActivity.class);
                 intent.putExtra(CHOSEN_PROFILE, profilesDetail.get(profileChooser.getSelectedItemPosition()));
+                intent.putExtra(CHOSEN_KEY, keys.get(profileChooser.getSelectedItemPosition()));
                 startActivity(intent);
             }
         });

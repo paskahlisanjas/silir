@@ -3,6 +3,6 @@
     <item
         android:id="@+id/delete_record"
         android:title="Delete"/>
-    <item android:id="@+id/report_record"
-        android:title="Generate Report"/>
+    <item android:id="@+id/upload_record"
+        android:title="Add to cloud"/>
 </menu>

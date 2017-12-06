@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.github.mikephil.charting.data.Entry;
 import com.kahl.silir.entity.MeasurementResult;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Paskahlis Anjas Prabowo on 04/09/2017.
@@ -27,11 +27,11 @@ public class ResultDbHandler extends DatabaseHandler {
     private final String RESULT_FEV1 = "fev1";
     private final String RESULT_PEV = "pev";
     private final String RESULT_TIME = "time";
-    private final String RESULT_ARRAY_FLOW = "arrayFlow";
-    private final String RESULT_ARRAY_VOLUME = "arrayVolume";
+    private final String DATA_VOLUME_TIME = "dataVolumeTime";
+    private final String DATA_FLOW_VOLUME = "dataFlowVolume";
 
-    SQLiteDatabase db;
-
+    private final String DELIMITER_ENTRY = "/";
+    private final String DELIMITER_X_Y = ";";
 
     public ResultDbHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,11 +46,10 @@ public class ResultDbHandler extends DatabaseHandler {
                 + RESULT_FEV1 + " REAL, "
                 + RESULT_PEV + " REAL, "
                 + RESULT_TIME + " TEXT, "
-                + RESULT_ARRAY_FLOW + " TEXT, "
-                + RESULT_ARRAY_VOLUME + " TEXT, "
+                + DATA_VOLUME_TIME + " TEXT, "
+                + DATA_FLOW_VOLUME + " TEXT, "
                 + "FOREIGN KEY(" + RESULT_PROFILE + ") REFERENCES "
-                + ProfileDbHandler.TABLE_PROFILES + "(" + ProfileDbHandler.PROFILE_ID + "));";
-
+                + ProfileDbHandler.TABLE_PROFILES + "(" + ProfileDbHandler.PROFILE_ID + "))";
         db.execSQL(query);
     }
 
@@ -67,7 +66,7 @@ public class ResultDbHandler extends DatabaseHandler {
 
     @Override
     public int countRecord() {
-        db = getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         final String query = "SELECT count(*) FROM " + TABLE_RESULTS;
         Cursor cursor = db.rawQuery(query, null);
         int result = cursor.moveToFirst() ? cursor.getInt(0) : 0;
@@ -76,59 +75,180 @@ public class ResultDbHandler extends DatabaseHandler {
         return result;
     }
 
-    final String[] allColumns = {RESULT_ORDER, RESULT_FEV1, RESULT_FVC, RESULT_PEV, RESULT_TIME,
-            RESULT_ARRAY_FLOW, RESULT_ARRAY_VOLUME};
+    final String[] allColumns = {RESULT_ORDER, RESULT_FEV1, RESULT_FVC, RESULT_PEV, RESULT_TIME};
 
-    public void addResult(MeasurementResult measurementResult) {
-        db = getReadableDatabase();
+    public void addResult(MeasurementResult measurementResult, String date) {
+        SQLiteDatabase db = getReadableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(RESULT_PROFILE, measurementResult.getProfileId());
         values.put(RESULT_FVC, measurementResult.getFvc());
         values.put(RESULT_FEV1, measurementResult.getFev1());
         values.put(RESULT_PEV, measurementResult.getPef());
-        values.put(RESULT_TIME, measurementResult.getTime());
-        values.put(RESULT_ARRAY_FLOW, measurementResult.getArrayFlow());
-        values.put(RESULT_ARRAY_VOLUME, measurementResult.getArrayVolume());
+        values.put(RESULT_TIME, date);
+
+        StringBuilder volumeTime = new StringBuilder();
+        for (Entry value : measurementResult.getVolumeTimeCurve())
+            volumeTime.append(value.getX()).append(DELIMITER_X_Y)
+                    .append(value.getY()).append(DELIMITER_ENTRY);
+
+        StringBuilder flowVolume = new StringBuilder();
+        for (Entry value : measurementResult.getFlowVolumeCurve())
+            flowVolume.append(value.getX()).append(DELIMITER_X_Y)
+                    .append(value.getY()).append(DELIMITER_ENTRY);
+
+        values.put(DATA_VOLUME_TIME, volumeTime.toString());
+        values.put(DATA_FLOW_VOLUME, flowVolume.toString());
 
         db.insert(TABLE_RESULTS, RESULT_ORDER, values);
         db.close();
     }
 
-    public void deleteResult(String order, String profileId) {
-        db = getReadableDatabase();
-        db.delete(TABLE_RESULTS, RESULT_ORDER + " =? AND " + RESULT_PROFILE + " =?", new String[]{order, profileId});
+    public void deleteResult(String time) {
+        SQLiteDatabase db = getWritableDatabase();
+        final String QUERY = "DELETE FROM " + TABLE_RESULTS + " WHERE " + RESULT_TIME + " = \'" + time + "\'";
+        db.execSQL(QUERY);
         db.close();
     }
 
     public MeasurementResult getCurrentMeasurement() {
         MeasurementResult retval = null;
         SQLiteDatabase db = getReadableDatabase();
-        //final String subQuery = "SELECT max(" + RESULT_ORDER + ") FROM " + TABLE_RESULTS;
-        //final String query = "SELECT * FROM (" + subQuery + ")";
-        final String query = "SELECT * FROM " + TABLE_RESULTS;
+        final String subQuery = "SELECT max(" + RESULT_ORDER + ") FROM " + TABLE_RESULTS;
+        final String query = "SELECT * FROM " + TABLE_RESULTS + " WHERE " + RESULT_ORDER + " = ("
+                + subQuery + ")";
 
         Cursor cursor = db.rawQuery(query, null);
         if (cursor != null) {
-            if (cursor.moveToLast())
-                retval = new MeasurementResult(
-                        cursor.getFloat(2),
-                        cursor.getFloat(3),
-                        cursor.getFloat(4),
-                        cursor.getString(5),
-                        cursor.getString(1),
-                        cursor.getString(6),
-                        cursor.getString(7));
+            if (cursor.moveToFirst()) {
+                String profileId = cursor.getString(1);
+                float fvc = cursor.getFloat(2);
+                float fev1 = cursor.getFloat(3);
+                float pef = cursor.getFloat(4);
+                String time = cursor.getString(5);
+                String volumeTimeData = cursor.getString(6);
+                String flowVolumeData = cursor.getString(7);
+
+                List<Entry> volumeTime = new ArrayList<>();
+                for (String value : volumeTimeData.split(DELIMITER_ENTRY)) {
+                    if (!value.isEmpty()) {
+                        String[] entry = value.split(DELIMITER_X_Y);
+                        float valueX = Float.parseFloat(entry[0]);
+                        float valueY = Float.parseFloat(entry[1]);
+                        volumeTime.add(new Entry(valueX, valueY));
+                    }
+                }
+
+                List<Entry> flowVolume = new ArrayList<>();
+                for (String value : flowVolumeData.split(DELIMITER_ENTRY)) {
+                    if (!value.isEmpty()) {
+                        String[] entry = value.split(DELIMITER_X_Y);
+                        float valueX = Float.parseFloat(entry[0]);
+                        float valueY = Float.parseFloat(entry[1]);
+                        flowVolume.add(new Entry(valueX, valueY));
+                    }
+                }
+
+                retval = new MeasurementResult(fvc, fev1, pef, time, profileId, volumeTime, flowVolume);
+            }
         }
+
         cursor.close();
         db.close();
         return retval;
     }
 
-    public HashMap<String, MeasurementResult> getAllResult() {
-        HashMap<String, MeasurementResult> result = new HashMap<>();
+    public List<MeasurementResult> getAllResult() {
+        SQLiteDatabase db = getReadableDatabase();
 
-        /*to be continued*/
+        final String query = "SELECT * FROM " + TABLE_RESULTS;
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<MeasurementResult> result = new ArrayList<>();
+        if (cursor != null) {
+             if (cursor.moveToFirst()) {
+                do {
+                    String profileId = cursor.getString(1);
+                    float fvc = cursor.getFloat(2);
+                    float fev1 = cursor.getFloat(3);
+                    float pef = cursor.getFloat(4);
+                    String time = cursor.getString(5);
+                    String volumeTimeData = cursor.getString(6);
+                    String flowVolumeData = cursor.getString(7);
+
+                    List<Entry> volumeTime = new ArrayList<>();
+                    for (String value : volumeTimeData.split(DELIMITER_ENTRY)) {
+                        if (!value.isEmpty()) {
+                            String[] entry = value.split(DELIMITER_X_Y);
+                            float valueX = Float.parseFloat(entry[0]);
+                            float valueY = Float.parseFloat(entry[1]);
+                            volumeTime.add(new Entry(valueX, valueY));
+                        }
+                    }
+
+                    List<Entry> flowVolume = new ArrayList<>();
+                    for (String value : flowVolumeData.split(DELIMITER_ENTRY)) {
+                        if (!value.isEmpty()) {
+                            String[] entry = value.split(DELIMITER_X_Y);
+                            float valueX = Float.parseFloat(entry[0]);
+                            float valueY = Float.parseFloat(entry[1]);
+                            flowVolume.add(new Entry(valueX, valueY));
+                        }
+                    }
+
+                    result.add(new MeasurementResult(fvc, fev1, pef, time, profileId, volumeTime, flowVolume));
+                } while (cursor.moveToNext());
+            }
+        }
+
+        cursor.close();
+        db.close();
+
+        return result;
+    }
+
+    public MeasurementResult getMeasurementResult(String time) {
+        final String QUERY = "SELECT * FROM " + TABLE_RESULTS + " WHERE " + RESULT_TIME + " = \'" + time + "\'";
+        MeasurementResult result = null;
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(QUERY, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String profileId = cursor.getString(1);
+            float fvc = cursor.getFloat(2);
+            float fev1 = cursor.getFloat(3);
+            float pef = cursor.getFloat(4);
+            String tm = cursor.getString(5);
+            String volumeTimeData = cursor.getString(6);
+            String flowVolumeData = cursor.getString(7);
+
+            List<Entry> volumeTime = new ArrayList<>();
+            for (String value : volumeTimeData.split(DELIMITER_ENTRY)) {
+                if (!value.isEmpty()) {
+                    String[] entry = value.split(DELIMITER_X_Y);
+                    float valueX = Float.parseFloat(entry[0]);
+                    float valueY = Float.parseFloat(entry[1]);
+                    volumeTime.add(new Entry(valueX, valueY));
+                }
+            }
+
+            List<Entry> flowVolume = new ArrayList<>();
+            for (String value : flowVolumeData.split(DELIMITER_ENTRY)) {
+                if (!value.isEmpty()) {
+                    String[] entry = value.split(DELIMITER_X_Y);
+                    float valueX = Float.parseFloat(entry[0]);
+                    float valueY = Float.parseFloat(entry[1]);
+                    flowVolume.add(new Entry(valueX, valueY));
+                }
+            }
+
+            result = new MeasurementResult(fvc, fev1, pef, tm, profileId, volumeTime, flowVolume);
+        }
+
+        cursor.close();
+        db.close();
 
         return result;
     }
